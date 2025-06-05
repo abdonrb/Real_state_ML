@@ -8,4 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+.env
 data
+LLM/real_estate.db
