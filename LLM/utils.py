@@ -9,7 +9,7 @@ load_dotenv()
 db_file = os.path.join(os.path.dirname(__file__), "real_estate.db")
 table_name = "properties"             
 
-df = pd.read_parquet(r'LLM\realtor-data.parquet')
+df = pd.read_parquet(r'realtor-data.parquet')
 
 db_conn = sqlite3.connect(db_file)
 cursor = db_conn.cursor()
