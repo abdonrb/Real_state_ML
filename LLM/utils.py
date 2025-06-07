@@ -6,23 +6,26 @@ from google import genai
 from google.genai import types
 load_dotenv()
 
-base_dir = os.path.dirname(__file__)
+table_name = "properties"
 
-# Ruta segura a la base de datos (en la raíz del proyecto)
-db_file = os.path.join(base_dir, "..", "real_estate.db")
+# Obtiene la ruta raíz del proyecto
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-# Ruta segura al CSV (ajusta si está en otra carpeta)
-csv_file = os.path.join(base_dir,"realtor-data.csv")
+# Ruta segura a la base de datos
+db_file = os.path.join(BASE_DIR, "real_estate.db")
 
-# Carga del dataframe
-df = pd.read_csv(csv_file)
+# Ruta segura al archivo CSV (ajusta si tu CSV está en otra carpeta)
+csv_path = os.path.join(BASE_DIR,"realtor-data.csv")
 
-table_name = "properties"             
+# Cargar el DataFrame
+df = pd.read_csv(csv_path)
 
+# Crear conexión a SQLite
 db_conn = sqlite3.connect(db_file)
 cursor = db_conn.cursor()
 
-df.to_sql(table_name, db_conn, if_exists="replace", index=False)
+# Crear tabla si no existe
+df.to_sql("properties", db_conn, if_exists="replace", index=False)
 
 # Check table creation success and count records
 cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
