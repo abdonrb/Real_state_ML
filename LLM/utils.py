@@ -30,13 +30,13 @@ df.to_sql("properties", db_conn, if_exists="replace", index=False)
 # Check table creation success and count records
 cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
 
-def show_all_tables() -> list[str]:
-    cursor = db_conn.cursor()
-
+def show_all_tables():
+    conn = sqlite3.connect("real_estate.db")  # crea una conexión nueva
+    cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-
-    tables = cursor.fetchall()
-    return [t[0] for t in tables]
+    tablas = cursor.fetchall()
+    conn.close()
+    return tablas
 
 def list_table_info(table_name: str) -> list[tuple[str, str]]:
 

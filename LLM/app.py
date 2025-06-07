@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import show_all_tables, list_table_info, query, RealEstateChatBot
+from utils import (show_all_tables, list_table_info, query, RealEstateChatBot)
 
 prompt = """
  Eres un chatbot que responde preguntas usando una base de datos SQL de bienes raíces.
