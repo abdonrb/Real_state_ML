@@ -9,7 +9,7 @@ load_dotenv()
 db_file = os.path.join(os.path.dirname(__file__), "real_estate.db")
 table_name = "properties"             
 
-df = pd.read_parquet('data/raw/realtor-data-clean-lat-lng.parquet')
+df = pd.read_csv('data/raw/realtor-data.zip.csv')
 
 db_conn = sqlite3.connect(db_file)
 cursor = db_conn.cursor()
