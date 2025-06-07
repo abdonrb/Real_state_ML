@@ -6,10 +6,18 @@ from google import genai
 from google.genai import types
 load_dotenv()
 
-db_file = os.path.join(os.path.dirname(__file__), "real_estate.db")
-table_name = "properties"             
+base_dir = os.path.dirname(__file__)
 
-df = pd.read_csv('realtor-data.csv')
+# Ruta segura a la base de datos (en la raíz del proyecto)
+db_file = os.path.join(base_dir, "..", "real_estate.db")
+
+# Ruta segura al CSV (ajusta si está en otra carpeta)
+csv_file = os.path.join(base_dir,"realtor-data.csv")
+
+# Carga del dataframe
+df = pd.read_csv(csv_file)
+
+table_name = "properties"             
 
 db_conn = sqlite3.connect(db_file)
 cursor = db_conn.cursor()
