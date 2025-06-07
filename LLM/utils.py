@@ -15,7 +15,7 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 db_file = os.path.join(BASE_DIR, "real_estate.db")
 
 # Ruta segura al archivo CSV (ajusta si tu CSV está en otra carpeta)
-csv_path = os.path.join(BASE_DIR,"realtor-data.csv")
+csv_path = os.path.join(BASE_DIR,"LLM","realtor-data.csv")
 
 # Cargar el DataFrame
 df = pd.read_csv(csv_path)
