@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+
 load_dotenv()
 
 table_name = "properties"
@@ -15,39 +16,32 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 db_file = os.path.join(BASE_DIR, "real_estate.db")
 
 # Ruta segura al archivo CSV (ajusta si tu CSV está en otra carpeta)
-csv_path = os.path.join(BASE_DIR,"LLM","realtor-data.csv")
+csv_path = os.path.join(BASE_DIR, "LLM", "realtor-data.csv")
 
 # Cargar el DataFrame
 df = pd.read_csv(csv_path)
 
-# Crear conexión a SQLite
-db_conn = sqlite3.connect(db_file)
-cursor = db_conn.cursor()
+# Crear tabla si no existe (solo aquí se hace la conexión globalmente porque es un paso inicial único)
+with sqlite3.connect(db_file) as conn:
+    df.to_sql(table_name, conn, if_exists="replace", index=False)
 
-# Crear tabla si no existe
-df.to_sql("properties", db_conn, if_exists="replace", index=False)
-
-# Check table creation success and count records
-cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
-
+# Función: Mostrar todas las tablas de la base de datos
 def show_all_tables():
-    conn = sqlite3.connect("real_estate.db")  # crea una conexión nueva
-    cursor = conn.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tablas = cursor.fetchall()
-    conn.close()
+    with sqlite3.connect(db_file) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tablas = cursor.fetchall()
     return tablas
 
+# Función: Obtener esquema de una tabla
 def list_table_info(table_name: str) -> list[tuple[str, str]]:
-
-    cursor = db_conn.cursor()
-
-    cursor.execute(f"PRAGMA table_info({table_name});")
-
-    schema = cursor.fetchall()
-    
+    with sqlite3.connect(db_file) as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"PRAGMA table_info({table_name});")
+        schema = cursor.fetchall()
     return [(col[1], col[2]) for col in schema]
 
+# Función: Formatear la respuesta del bot
 def formatear_respuesta(data, consulta):
     if not data:
         return "No se encontraron resultados."
@@ -71,15 +65,14 @@ def formatear_respuesta(data, consulta):
         table += "| " + " | ".join(str(row[k]) for k in keys) + " |\n"
     return table
 
+# Función: Ejecutar consultas SQL
 def query(sql: str) -> str:
-    cursor = db_conn.cursor()
-    cursor.execute(sql)
-
-    columns = [desc[0] for desc in cursor.description]
-    rows = cursor.fetchall()
-
-    data = [dict(zip(columns, row)) for row in rows]
-
+    with sqlite3.connect(db_file) as conn:
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        columns = [desc[0] for desc in cursor.description]
+        rows = cursor.fetchall()
+        data = [dict(zip(columns, row)) for row in rows]
     return formatear_respuesta(data, sql)
 
 
