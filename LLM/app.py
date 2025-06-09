@@ -34,13 +34,24 @@ db_tools = [show_all_tables, list_table_info, query]
 bot = RealEstateChatBot(prompt, db_tools)
 
 # ----- TÍTULO -----
-st.markdown("<h1 style='text-align: center;'>💬 Chatbot Inmobiliario</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>💬 Chatbot Real State</h1>", unsafe_allow_html=True)
 
-# ----- SESIÓN -----
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# ----- ENTRADA -----
+# 🔸 Mostrar mensaje de bienvenida solo al cargar por primera vez
+if len(st.session_state.history) == 0:
+    bienvenida = (
+        "👋 ¡Hola! Soy tu agente virtual especializado en viviendas en Estados Unidos.\n\n"
+        "Estoy aquí para ayudarte a consultar información sobre precios, ciudades, número de habitaciones y más.\n\n"
+        "**Ejemplos que puedes probar:**\n"
+        "- ¿Qué ciudad tiene más casas por debajo de $400,000?\n"
+        "- ¿En qué estado hay más propiedades en venta?\n"
+        "- ¿Cuál es el precio promedio en California?"
+    )
+    st.session_state.history.append(("bot", bienvenida))
+
+# 🟩 Entrada de usuario
 user_input = st.chat_input("Escribe tu consulta...")
 
 if user_input:
