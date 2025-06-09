@@ -128,14 +128,14 @@ class RealEstateChatBot:
         response = self.chat.send_message(message)
         reply = response.text.strip()
 
+        # Evita saludo duplicado
         if self.first_turn:
-            greeting = "Hola! 👋 Con gusto te ayudo. "
             self.first_turn = False
-        else:
-            greeting = ""
+            if "hola" not in reply.lower():
+                reply = f"¡Hola! 👋 Con gusto te ayudo. {reply}"
 
-        # Evita duplicar el cierre
-        if "¿Necesitas otra consulta?" not in reply:
-            reply += " ¿Necesitas otra consulta?"
+        # Agrega cierre si falta
+        if "¿necesitas otra consulta?" not in reply.lower():
+            reply = f"{reply.rstrip('.')} ¿Necesitas otra consulta?"
 
-        return f"{greeting}{reply}"
+        return reply

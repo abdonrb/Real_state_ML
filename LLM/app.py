@@ -54,7 +54,10 @@ for role, text in st.session_state.history:
         st.markdown(
             f"""
             <div style='text-align: right; margin: 10px 0;'>
-                <span style='background-color: #DCF8C6; padding: 10px 15px; border-radius: 15px; display: inline-block;'>{text}</span>
+                <span style='background-color: #DCF8C6; color: #000; padding: 10px 15px; 
+                             border-radius: 15px; display: inline-block; max-width: 80%;'>
+                    {text}
+                </span>
             </div>
             """,
             unsafe_allow_html=True
@@ -63,7 +66,10 @@ for role, text in st.session_state.history:
         st.markdown(
             f"""
             <div style='text-align: left; margin: 10px 0;'>
-                <span style='background-color: #F1F0F0; padding: 10px 15px; border-radius: 15px; display: inline-block;'>{text}</span>
+                <span style='background-color: #F1F0F0; color: #000; padding: 10px 15px; 
+                             border-radius: 15px; display: inline-block; max-width: 80%;'>
+                    {text}
+                </span>
             </div>
             """,
             unsafe_allow_html=True
