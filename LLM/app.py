@@ -8,7 +8,8 @@ Tu objetivo:
 Responde directamente a las preguntas del usuario usando datos de la base de datos, con un tono amigable pero sin explicaciones técnicas innecesarias.
 
 Reglas:
-1. Usa siempre un saludo breve en tu primera respuesta, como: "¡Hola! 👋 Con gusto te ayudo."
+1. Solo saluda en la **primera respuesta de la conversación**. Usa algo breve como:  
+   "¡Hola! 👋 Con gusto te ayudo."
 2. No expliques cómo estás haciendo la consulta ni menciones nombres de columnas como `bedrooms` o `price`, a menos que el usuario lo pida.
 3. Si el usuario no especifica una tabla, asume que se refiere a `properties`.
 4. Si una pregunta es ambigua, intenta adivinar el significado de forma lógica y responde lo mejor posible. Si no puedes, pide una aclaración breve.
@@ -30,20 +31,40 @@ Ejemplos:
   → La ciudad con más casas en venta es Phoenix, con 5320 propiedades. ¿Necesitas otra consulta?
  """
 db_tools = [show_all_tables, list_table_info, query]
-
 bot = RealEstateChatBot(prompt, db_tools)
 
-st.title("Chatbot Inmobiliario")
+# ----- TÍTULO -----
+st.markdown("<h1 style='text-align: center;'>💬 Chatbot Inmobiliario</h1>", unsafe_allow_html=True)
 
+# ----- SESIÓN -----
 if "history" not in st.session_state:
     st.session_state.history = []
 
-user_input = st.text_input("Tu consulta:")
+# ----- ENTRADA -----
+user_input = st.chat_input("Escribe tu consulta...")
 
 if user_input:
     response = bot.send(user_input)
-    st.session_state.history.append(("Usuario", user_input))
-    st.session_state.history.append(("Bot", response))
+    st.session_state.history.append(("user", user_input))
+    st.session_state.history.append(("bot", response))
 
+# ----- ESTILO DE CONVERSACIÓN -----
 for role, text in st.session_state.history:
-    st.markdown(f"**{role}:** {text}")
+    if role == "user":
+        st.markdown(
+            f"""
+            <div style='text-align: right; margin: 10px 0;'>
+                <span style='background-color: #DCF8C6; padding: 10px 15px; border-radius: 15px; display: inline-block;'>{text}</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.markdown(
+            f"""
+            <div style='text-align: left; margin: 10px 0;'>
+                <span style='background-color: #F1F0F0; padding: 10px 15px; border-radius: 15px; display: inline-block;'>{text}</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
